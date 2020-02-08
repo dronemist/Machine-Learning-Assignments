@@ -6,7 +6,7 @@ import csv
 import math
 
 # Stopping gradient descent 
-EPSILON = 0.0000000000000000001
+EPSILON = 1e-10
 
 # Learning rate for gradient descent
 LEARNING_RATE = 0.01
@@ -48,7 +48,7 @@ def normalise(x):
   mean = np.array(mean)
   variance = np.array(variance)
 
-  x = ((x - mean) / variance)
+  x = ((x - mean)/ variance)
   return x 
 
 def read_csv_file(file_name):
@@ -87,20 +87,6 @@ def _gradient(x, y, theta):
 
   return gradient / np.shape(x[:, 0])[0]
 
-def plot_3D(x, y, theta_vector):
-  x1 = np.linspace(-0.1, 0.1, 1000)
-  y1 = np.linspace(-2, 2, 1000)
-  X, Y = np.meshgrid(x1, y1)
-  Z = _loss(x, y, np.array([X, Y]))
-  ax = plt.axes(projection='3d')
-  ax.contour3D(X, Y, Z, 200, linewidths=1, cmap = 'binary')
-  # Z1 = [_loss(x, y, np.array([t1, t2])) for [t1, t2] in theta_vector]
-  # ax.scatter3D(theta_vector[:, 0], theta_vector[:, 1], Z1)
-  ax.set_xlabel('Theta 1')
-  ax.set_ylabel('Theta 0')
-  ax.set_zlabel('z')
-  plt.show()
-
 def batch_gradient_descent(x, y):
   """
   Applies batch gradient descent to x and y
@@ -113,8 +99,30 @@ def batch_gradient_descent(x, y):
   new_cost = 0
 
   diff = np.inf
+  count = 0
 
-  theta_vector = []
+  # Plotting the 3-d mesh 
+  x1 = np.linspace(-0.01, 0.01, 100)
+  y1 = np.linspace(-0.5, 1.5, 100)
+  X, Y = np.meshgrid(x1, y1)
+  Z = []
+
+  # Making Z list of thetas
+  for (i, x_i) in enumerate(X):
+    Z.append([])
+    for (j, x_j) in enumerate(x_i):
+      Z[i].append(_loss(x, y, np.array([x_j, Y[i][j]])))
+  Z = np.array(Z)
+
+  # Plotting the mest
+  ax = plt.axes(projection='3d')
+  ax.plot_wireframe(X, Y, Z, color='green', linewidths=0.5)
+
+  # Labels
+  ax.set_xlabel('Theta 1')
+  ax.set_ylabel('Theta 0')
+  ax.set_zlabel('z')
+
   while diff > EPSILON:
     
     # Gradient descent
@@ -128,10 +136,13 @@ def batch_gradient_descent(x, y):
     old_theta = new_theta
     old_cost = new_cost
 
-    # Plotting the current value
-    theta_vector.append(new_theta)
+    # Plotting every 10th value
+    if count % 10 == 0:
+      ax.scatter3D(new_theta[0], new_theta[1], new_cost)
+      plt.pause(0.2)
+    count += 1
 
-  plot_3D(x, y, np.array(theta_vector))
+  plt.show()
   return new_theta
 
 if __name__ == "__main__":
