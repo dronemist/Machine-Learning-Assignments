@@ -1,3 +1,4 @@
+from mpl_toolkits import mplot3d
 from numpy import linalg as lg
 import numpy as np
 import matplotlib.pyplot as plt
@@ -5,23 +6,26 @@ import csv
 import math
 
 # Stopping gradient descent 
-EPSILON = 0.00000000001
+EPSILON = 0.0000000000000000001
 
 # Learning rate for gradient descent
 LEARNING_RATE = 0.01
 
 def plot_2D(x, y, theta):
+  """
+  Plotting hypothesis function on a plane
+  """
   # Plotting actual data
   plt.scatter(x[:, 0], y, color= "blue",  
             marker= "o", s=10)
   prediction = np.array([np.dot(theta.T, x_i) for x_i in x])
-  # plotting the line
+  # plotting the hypothesis function
   plt.plot(x[:, 0], prediction, color = "green")
 
   # Assigning labels
   plt.xlabel('Normalised acidity')
-  plt.ylabel('Normalised density')
-  
+  plt.ylabel('Density')
+
   plt.show()
 
 def normalise(x):
@@ -83,6 +87,20 @@ def _gradient(x, y, theta):
 
   return gradient / np.shape(x[:, 0])[0]
 
+def plot_3D(x, y, theta_vector):
+  x1 = np.linspace(-0.1, 0.1, 1000)
+  y1 = np.linspace(-2, 2, 1000)
+  X, Y = np.meshgrid(x1, y1)
+  Z = _loss(x, y, np.array([X, Y]))
+  ax = plt.axes(projection='3d')
+  ax.contour3D(X, Y, Z, 200, linewidths=1, cmap = 'binary')
+  # Z1 = [_loss(x, y, np.array([t1, t2])) for [t1, t2] in theta_vector]
+  # ax.scatter3D(theta_vector[:, 0], theta_vector[:, 1], Z1)
+  ax.set_xlabel('Theta 1')
+  ax.set_ylabel('Theta 0')
+  ax.set_zlabel('z')
+  plt.show()
+
 def batch_gradient_descent(x, y):
   """
   Applies batch gradient descent to x and y
@@ -96,6 +114,7 @@ def batch_gradient_descent(x, y):
 
   diff = np.inf
 
+  theta_vector = []
   while diff > EPSILON:
     
     # Gradient descent
@@ -109,20 +128,25 @@ def batch_gradient_descent(x, y):
     old_theta = new_theta
     old_cost = new_cost
 
+    # Plotting the current value
+    theta_vector.append(new_theta)
+
+  plot_3D(x, y, np.array(theta_vector))
   return new_theta
 
 if __name__ == "__main__":
 
   # Reading csv file and adding 1 for the intercept term
   acidity = __add_dimension(normalise(read_csv_file('data/q1/linearX.csv')))
-
   density = read_csv_file('data/q1/linearY.csv')
 
   # Applying gradient descent
   theta = batch_gradient_descent(acidity, density)
-  print(acidity)
+
+  # plot_3D(acidity, density, theta)
   print(_loss(acidity, density, theta))
   plot_2D(acidity, density, theta)
+  print("The line is: {}x + {}".format(*theta))
   # for x in acidity:
   #   print(np.dot(theta.T, x))
 
