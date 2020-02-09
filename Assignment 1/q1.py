@@ -33,23 +33,9 @@ def normalise(x):
   """
   Normalise x to have 0 mean and 1 variance
   """
-  total_samples = np.shape(x[:, 0])[0]
-  mean = 0
-  variance = 0
-
-  for x_i in x:
-    mean += x_i 
-  mean /= total_samples
-
-  for x_i in x:
-    variance += (x_i - mean) ** 2
-  variance /= total_samples
-
-  # Converting to numpy array
-  mean = np.array(mean)
-  variance = np.array(variance)
-
-  x = ((x - mean)/ variance)
+  mean = np.mean(x, axis=0)
+  variance = np.var(x, axis=0)
+  x = ((x - mean)/ (variance ** 0.5))
   return x 
 
 def read_csv_file(file_name):

@@ -4,7 +4,7 @@ import math
 import csv
 import matplotlib.pyplot as plt
 
-EPSILON = 1e-15
+EPSILON = 1e-10
 
 def plot_2D(x, y, theta):
   """
@@ -35,7 +35,7 @@ def normalise(x):
   """
   mean = np.mean(x, axis=0)
   variance = np.var(x, axis=0)
-  x = ((x - mean)/ variance)
+  x = ((x - mean)/ (variance ** 0.5))
   return x 
 
 def sigmoid(x, theta):
@@ -91,20 +91,20 @@ def newton_method(x, y):
     hessian = _hessian_logistic(x, y, old_theta)
     gradient = _gradient_logistic(x, y, old_theta)
     new_theta = old_theta  - np.dot(lg.inv(hessian), gradient)
-
     # Calculating new cost  
-    new_cost = _loss_logistic(x, y, new_theta)
-    diff = abs(new_cost - old_cost)
+    # new_cost = _loss_logistic(x, y, new_theta)
+    diff = abs(lg.norm(new_theta - old_theta))
 
     # Updating theta
     old_theta = new_theta
-    old_cost = new_cost
+    # old_cost = new_cost
 
   return new_theta
 
 if __name__ == "__main__":
   x = np.loadtxt('./data/q3/logisticX.csv', delimiter=',')
   x = normalise(x)
+  print(np.max(x[:, 0]))
   x1 = np.ones_like(x[:, 0])
   x = np.column_stack((x1, x))
 
