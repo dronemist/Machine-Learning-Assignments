@@ -1,8 +1,10 @@
 import numpy as np
+from mpl_toolkits import mplot3d
+import matplotlib.pyplot as plt
 import sys
 import collections
 
-EPSILON = 1e-10
+EPSILON = 1e-2
 
 LEARNING_RATE = 0.001
 
@@ -20,22 +22,22 @@ def sample_points():
     y.append(SAMPLE_THETA[0] * 1 + SAMPLE_THETA[1] * x1[i] + SAMPLE_THETA[2] * x2[i])
   np.savetxt('samples.txt', np.c_[x1, x2, y])
 
-def _loss(x, y, theta):
+def _loss(x, y, theta, start_index, end_index):
   loss = 0
-  for (i, x_i) in enumerate(x):
-    mat_mult = np.dot(theta.T, x_i)
+  for i in range(start_index, end_index):
+    mat_mult = np.dot(theta.T, x[i])
     loss += (y[i] - mat_mult) ** 2
-  return loss / (2 * np.shape(x[:, 0])[0])
+  return loss / (2 * (end_index - start_index))
 
-def _gradient(x, y, theta):    
+def _gradient(x, y, theta, start_index, end_index):    
   gradient = np.zeros_like(x[0])
 
-  for (i, x_i) in enumerate(x):
-    mat_mult = np.dot(theta.T, x_i)
+  for i in range(start_index, end_index):
+    mat_mult = np.dot(theta.T, x[i])
     # Calculating the gradient
-    gradient += (y[i] - mat_mult) * (-x_i)
+    gradient += (y[i] - mat_mult) * (-x[i])
 
-  return gradient / np.shape(x[:, 0])[0]
+  return gradient / (end_index - start_index)
 
 def stochastic_gradient_descent(x, y, batch_size):
   """
@@ -50,84 +52,66 @@ def stochastic_gradient_descent(x, y, batch_size):
   old_cost = 0
   new_cost = 0
 
-  buffer = collections.deque([], 1000)
-
   diff = np.inf
   count = 0
 
   total_samples = np.shape(x[:, 0])[0]
+  buffer = collections.deque([], 1000)
 
-  # # Plotting the 3-d mesh
-  # x1 = np.linspace(-0.01, 0.01, 100)
-  # y1 = np.linspace(-0.5, 1.5, 100)
-  # X, Y = np.meshgrid(x1, y1)
-  # Z = []
+  # Plotting the mesh
+  ax = plt.axes(projection='3d')
 
-  # # Making Z list of thetas
-  # for (i, x_i) in enumerate(X):
-  #   Z.append([])
-  #   for (j, x_j) in enumerate(x_i):
-  #     Z[i].append(_loss(x, y, np.array([x_j, Y[i][j]])))
-  # Z = np.array(Z)
-
-  # # Plotting the mesh
-  # ax = plt.axes(projection='3d')
-  # ax.plot_wireframe(X, Y, Z, color='green', linewidths=0.5)
-
-
-  # # Labels
-  # ax.set_xlabel('Theta[1]')
-  # ax.set_ylabel('Theta[0]')
-  # ax.set_zlabel('Cost')
+  # Labels
+  ax.set_xlabel('Theta[0]')
+  ax.set_ylabel('Theta[1]')
+  ax.set_zlabel('Theta[2]')
 
   while True:
-    
     for i in range(0, total_samples, batch_size):
       
-      x_temp = x[i : i + batch_size, :]
-      y_temp = y[i : i + batch_size]
-
+      # x_temp = x[i : i + batch_size, :]
+      # y_temp = y[i : i + batch_size]
       # Gradient descent
-      new_theta = old_theta - (LEARNING_RATE * _gradient(x_temp, y_temp, old_theta))
+      new_theta = old_theta - (LEARNING_RATE * _gradient(x, y, old_theta, i, i + batch_size))
 
-      buffer.append(_loss(x_temp, y_temp, new_theta))
+      buffer.append(_loss(x, y, new_theta, i, i + batch_size))
       # Calculating new cost
       new_cost = np.average(buffer)
-      print("Iteration {} => {}".format(count, new_cost))
+      if count % (total_samples / batch_size) == 0:
+        print("Iteration {} => {}".format(count, new_cost))
       
       diff = abs(new_cost - old_cost)
 
       if diff < EPSILON:
+        print("Number of updates: {}".format(count))
+        # plt.show()
         return new_theta
       # Updating theta
       old_theta = new_theta
       old_cost = new_cost
 
-      count += 1
-    # Plotting every 10th value
-    # if count % 10 == 0:
-    #   ax.scatter3D(new_theta[0], new_theta[1], new_cost)
-    #   plt.pause(0.2)
+      # Plotting every 100th value
+      if count % 1 == 0:
+        ax.scatter3D(new_theta[0], new_theta[1], new_theta[2])
+        plt.pause(0.2)
     
-
-  # plt.show()
-  # return new_theta
+      count += 1    
+  return new_theta
 
 
 if __name__ == "__main__":
   
   try:
     batch_size = int(sys.argv[1])
-  except expression as identifier:
+  except:
     batch_size = 100
   
   # sample_points()
 
   # Reading the data and modifying to desired form
   k = np.loadtxt('samples.txt')
-  print(np.shape(k))
   # Shuffling data
-  np.random.shuffle(k)
+  # np.random.shuffle(k)
   x1 = k[:, 0]
   x2 = k[:, 1]
   y = k[:, 2]
@@ -138,6 +122,6 @@ if __name__ == "__main__":
   # Applying SGD 
   theta = stochastic_gradient_descent(x, y, batch_size)
   print(theta)
-  print(_loss(x, y, theta))
+  print(_loss(x, y, theta, 0, np.shape(x[:, 0])[0]))
 
 
