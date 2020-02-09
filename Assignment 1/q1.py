@@ -163,7 +163,7 @@ if __name__ == "__main__":
   # custom learning rate
   try:
     learning_rate = float(sys.argv[2])
-  except expression as identifier:
+  except:
     learning_rate = 0.01   
 
   # Reading csv file and adding 1 for the intercept term
