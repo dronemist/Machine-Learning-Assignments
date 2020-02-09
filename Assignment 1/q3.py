@@ -2,30 +2,41 @@ from numpy import linalg as lg
 import numpy as np
 import math
 import csv
-import matplotlib as plt
+import matplotlib.pyplot as plt
 
-EPSILON = 1e-10
+EPSILON = 1e-15
+
+def plot_2D(x, y, theta):
+  """
+  Plotting hypothesis function on a plane
+  """
+  plt.scatter(x[:, 1], x[:, 2], color= "blue",  
+            marker= "o", s=10)
+  # Plotting actual data
+  for (i, y_i) in enumerate(y):
+    if(y_i == 1):
+      plt.scatter(x[i, 1], x[i, 2], color= "blue",  
+            marker= "*", s=10)
+    else:
+      plt.scatter(x[i, 1], x[i, 2], color= "red",  
+            marker= "*", s=10)        
+
+  # Plotting logistic line
+  y_temp = - (theta[1] / theta[2]) * x[:, 1] - (theta[0]/ theta[2])
+  plt.plot(x[:, 1], y_temp)
+
+  # Assigning labels
+  plt.xlabel('x1')
+  plt.ylabel('x2')
+
+  plt.show()
 
 def normalise(x):
   """
   Normalise x to have 0 mean and 1 variance
   """
-  total_samples = np.shape(x[:, 0])[0]
-  mean = 0
-  variance = 0
-
-  for x_i in x:
-    mean += x_i 
-  mean /= total_samples
-
-  for x_i in x:
-    variance += (x_i - mean) ** 2
-  variance /= total_samples
-
-  # Converting to numpy array
-  mean = np.array(mean)
-  variance = np.array(variance)
-
+  mean = np.mean(x, axis=0)
+  variance = np.var(x, axis=0)
   x = ((x - mean)/ variance)
   return x 
 
@@ -86,7 +97,7 @@ def newton_method(x, y):
     # Calculating new cost  
     new_cost = _loss_logistic(x, y, new_theta)
     diff = abs(new_cost - old_cost)
-    
+
     # Updating theta
     old_theta = new_theta
     old_cost = new_cost
@@ -95,9 +106,14 @@ def newton_method(x, y):
 
 if __name__ == "__main__":
   x = np.loadtxt('./data/q3/logisticX.csv', delimiter=',')
+  x = normalise(x)
   x1 = np.ones_like(x[:, 0])
   x = np.column_stack((x1, x))
+
   y = np.loadtxt('./data/q3/logisticY.csv')
   theta = newton_method(x, y)
-  print(theta)
-  print(_loss_logistic(x, y, theta))
+  print("Theta is: {}".format(theta))
+  print("Logistic loss is: {}".format(_loss_logistic(x, y, theta)))
+  plot_2D(x, y, theta)
+
+  print("line is {}x + {}".format(-(theta[1]/theta[2])[0], -(theta[0]/theta[2])[0]))
