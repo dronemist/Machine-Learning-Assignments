@@ -96,7 +96,7 @@ def batch_gradient_descent(x, y, draw_3d = True):
     y1 = np.linspace(-0.5, 1.5, 100)
   else:
     x1 = np.linspace(-1, 1, 100)
-    y1 = np.linspace(-0.5, 2.5, 100)  
+    y1 = np.linspace(-1, 2, 100)  
   X, Y = np.meshgrid(x1, y1)
   Z = []
 
@@ -116,8 +116,8 @@ def batch_gradient_descent(x, y, draw_3d = True):
     # Plotting the contours
     f2 = plt.figure(2)
     ax = f2.add_axes([left, bottom, width, height])
-    cp = ax.contourf(X, Y, Z)
-    plt.colorbar(cp)
+    cp = ax.contour(X, Y, Z)
+    # plt.colorbar(cp)
     plt.clabel(cp, inline=1, fontsize=10)
 
 
