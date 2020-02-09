@@ -95,8 +95,8 @@ def batch_gradient_descent(x, y, draw_3d = True):
     x1 = np.linspace(-0.01, 0.01, 100)
     y1 = np.linspace(-0.5, 1.5, 100)
   else:
-    x1 = np.linspace(-1, 1, 100)
-    y1 = np.linspace(-1, 2, 100)  
+    x1 = np.linspace(-1, 1, 200)
+    y1 = np.linspace(-1, 2, 200)  
   X, Y = np.meshgrid(x1, y1)
   Z = []
 

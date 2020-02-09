@@ -62,18 +62,31 @@ def plot_2D(x, y):
   """
   Plotting hypothesis function on a plane
   """
+  oneAlaska = False
+  oneCanada = False
   # Plotting actual data
   for (i, y_i) in enumerate(y):
     if(y_i == 1):
-      plt.plot(x[i, 0], x[i, 1], color= "blue",  
-            marker= "x", mew=1, ms=5)
+      if not oneCanada:
+        plt.plot(x[i, 0], x[i, 1], color= "blue",  
+            marker= "x", mew=1, ms=5, label="Canada")
+        oneCanada = True    
+      else:
+        plt.plot(x[i, 0], x[i, 1], color= "blue",  
+            marker= "x", mew=1, ms=5)      
     else:
-      plt.plot(x[i, 0], x[i, 1], color= "red",  
-            marker= "+", mew=1, ms=5)        
+      if not oneAlaska:
+        plt.plot(x[i, 0], x[i, 1], color= "red",  
+            marker= "+", mew=1, ms=5, label="Alaska")   
+        oneAlaska = True    
+      else:
+        plt.plot(x[i, 0], x[i, 1], color= "red",  
+            marker= "+", mew=1, ms=5)  
+
 
   # Plotting the linear boundary line
   # Required terms
-  x_temp = np.linspace(-2, 2, 100)
+  x_linear = np.linspace(-3, 3, 100)
   sigma_inverse = np.linalg.inv(covariance(x, y))
   mu0 = mean(x, y, 0)
   mu1 = mean(x, y, 1)
@@ -104,19 +117,20 @@ def plot_2D(x, y):
   f = -constant_quadratic
 
   # Equation of the line
-  y_linear = -x_temp * (K_linear[0] / K_linear[1]) + constant_linear / K_linear[1]
+  y_linear = -x_linear * (K_linear[0] / K_linear[1]) + constant_linear / K_linear[1]
   print("Equation of linear boundary is: {}x + {}".format(-K_linear[0]/K_linear[1], constant_linear/K_linear[1]))
-  plt.plot(x_temp, y_linear)
+  plt.plot(x_linear, y_linear)
 
   # Equation of quadratic boundary
-  y_qudratic = np.linspace(-2, 2, 100)
-  x_temp, y_qudratic = np.meshgrid(x_temp, y_qudratic)
-  plt.contour(x_temp, y_qudratic,(a*x_temp**2 + b*x_temp*y_qudratic + c*y_qudratic**2 + d*x_temp + e*y_qudratic + f), [0], colors='green')
+  x_quadratic = np.linspace(-3, 3, 100)
+  y_qudratic = np.linspace(-2, 4, 100)
+  x_quadratic, y_qudratic = np.meshgrid(x_quadratic, y_qudratic)
+  plt.contour(x_quadratic, y_qudratic,(a*x_quadratic**2 + b*x_quadratic*y_qudratic + c*y_qudratic**2 + d*x_quadratic + e*y_qudratic + f), [0], colors='green')
 
   # Assigning labels
   plt.xlabel('x1')
   plt.ylabel('x2')
-  # plt.legend()
+  plt.legend()
   plt.show()
 
 
