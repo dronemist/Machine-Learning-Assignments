@@ -84,7 +84,7 @@ def stochastic_gradient_descent(x, y, batch_size):
 
       if diff < EPSILON:
         print("Number of updates: {}".format(count))
-        # plt.show()
+        plt.show()
         return new_theta
       # Updating theta
       old_theta = new_theta
@@ -120,8 +120,18 @@ if __name__ == "__main__":
   x = np.column_stack((x0, x12))
   
   # Applying SGD 
-  theta = stochastic_gradient_descent(x, y, batch_size)
-  print(theta)
+  # theta = stochastic_gradient_descent(x, y, batch_size)
+  # print(theta)
+  # print(_loss(x, y, theta, 0, np.shape(x[:, 0])[0]))
+
+
+  # Testing on given data
+  k_test = np.loadtxt('./data/q2/q2test.csv', delimiter=',', skiprows=1)
+  print(k_test)
+  x1 = k_test[:, 0]
+  x2 = k_test[:, 1]
+  y = k_test[:, 2]
+  x0 = np.ones_like(x1)
+  x12 = np.column_stack((x1, x2))
+  x = np.column_stack((x0, x12))
   print(_loss(x, y, theta, 0, np.shape(x[:, 0])[0]))
-
-
