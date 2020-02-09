@@ -116,4 +116,4 @@ if __name__ == "__main__":
   print("Logistic loss is: {}".format(_loss_logistic(x, y, theta)))
   plot_2D(x, y, theta)
 
-  print("line is {}x + {}".format(-(theta[1]/theta[2])[0], -(theta[0]/theta[2])[0]))
+  print("line is: {}x + {}".format(-(theta[1]/theta[2])[0], -(theta[0]/theta[2])[0]))
