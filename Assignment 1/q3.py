@@ -10,16 +10,14 @@ def plot_2D(x, y, theta):
   """
   Plotting hypothesis function on a plane
   """
-  plt.scatter(x[:, 1], x[:, 2], color= "blue",  
-            marker= "o", s=10)
   # Plotting actual data
   for (i, y_i) in enumerate(y):
     if(y_i == 1):
-      plt.scatter(x[i, 1], x[i, 2], color= "blue",  
-            marker= "*", s=10)
+      plt.plot(x[i, 1], x[i, 2], color= "blue",  
+            marker= "x", mew=1, ms=5)
     else:
-      plt.scatter(x[i, 1], x[i, 2], color= "red",  
-            marker= "*", s=10)        
+      plt.plot(x[i, 1], x[i, 2], color= "red",  
+            marker= "+", mew=1, ms=5)        
 
   # Plotting logistic line
   y_temp = - (theta[1] / theta[2]) * x[:, 1] - (theta[0]/ theta[2])
