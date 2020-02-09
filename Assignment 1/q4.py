@@ -102,13 +102,13 @@ def plot_2D(x, y):
   d = K1_quadratic[0]
   e = K1_quadratic[1]
   f = -constant_quadratic
-  # a, b, c, d, e = (), (),, , 
 
   # Equation of the line
   y_linear = -x_temp * (K_linear[0] / K_linear[1]) + constant_linear / K_linear[1]
   print("Equation of linear boundary is: {}x + {}".format(-K_linear[0]/K_linear[1], constant_linear/K_linear[1]))
-  
   plt.plot(x_temp, y_linear)
+
+  # Equation of quadratic boundary
   y_qudratic = np.linspace(-2, 2, 100)
   x_temp, y_qudratic = np.meshgrid(x_temp, y_qudratic)
   plt.contour(x_temp, y_qudratic,(a*x_temp**2 + b*x_temp*y_qudratic + c*y_qudratic**2 + d*x_temp + e*y_qudratic + f), [0], colors='green')
@@ -131,8 +131,16 @@ if __name__ == "__main__":
   y[y == "Canada"] = float(1)
   y = np.array(y, dtype=float)
 
-  print(phi(y))
-  print(mean(x, y, 0)) 
-  print(mean(x, y, 1))
-  print(covariance(x, y))  
+  print("Sigma 1 = Sigma 0 =>")
+  print("Phi: {}".format(phi(y)))
+  print("Mu0: {}".format(mean(x, y, 0))) 
+  print("Mu1: {}".format(mean(x, y, 1)))
+  print("Sigma: {}".format(covariance(x, y)))  
   plot_2D(x, y)
+
+  print("Sigma 1 != Sigma 0 =>")
+  print("Phi: {}".format(phi(y)))
+  print("Mu0: {}".format(mean(x, y, 0))) 
+  print("Mu1: {}".format(mean(x, y, 1)))
+  print("Sigma1: {}".format(general_covariance(x, y, 1)))
+  print("Sigma0: {}".format(general_covariance(x, y, 0)))
