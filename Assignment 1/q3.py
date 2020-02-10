@@ -11,13 +11,26 @@ def plot_2D(x, y, theta):
   Plotting hypothesis function on a plane
   """
   # Plotting actual data
+  onelabel = False
+  zerolabel = False
   for (i, y_i) in enumerate(y):
     if(y_i == 1):
-      plt.plot(x[i, 1], x[i, 2], color= "blue",  
-            marker= "x", mew=1, ms=5)
+      if not onelabel:
+        plt.plot(x[i, 1], x[i, 2], color= "blue",  
+            marker= "x", mew=1, ms=5, label='1')
+        onelabel = True
+      else:
+        plt.plot(x[i, 1], x[i, 2], color= "blue",  
+            marker= "x", mew=1, ms=5)  
     else:
-      plt.plot(x[i, 1], x[i, 2], color= "red",  
-            marker= "+", mew=1, ms=5)        
+      if not zerolabel:
+        plt.plot(x[i, 1], x[i, 2], color= "red",  
+            marker= "+", mew=1, ms=5, label='0')
+        zerolabel = True
+      else:
+        plt.plot(x[i, 1], x[i, 2], color= "red",  
+            marker= "+", mew=1, ms=5)
+
 
   # Plotting logistic line
   y_temp = - (theta[1] / theta[2]) * x[:, 1] - (theta[0]/ theta[2])
@@ -26,7 +39,8 @@ def plot_2D(x, y, theta):
   # Assigning labels
   plt.xlabel('x1')
   plt.ylabel('x2')
-
+  plt.title('Logistic Regression')
+  plt.legend()
   plt.show()
 
 def normalise(x):
@@ -104,7 +118,6 @@ def newton_method(x, y):
 if __name__ == "__main__":
   x = np.loadtxt('./data/q3/logisticX.csv', delimiter=',')
   x = normalise(x)
-  print(np.max(x[:, 0]))
   x1 = np.ones_like(x[:, 0])
   x = np.column_stack((x1, x))
 
