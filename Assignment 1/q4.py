@@ -107,7 +107,7 @@ def plot_2D(x, y):
   K1_quadratic = sigma0_inverse_mu_0 - sigma1_inverse_mu_1
   K2_quadratic = sigma1_inverse - sigma0_inverse
   constant_quadratic = - ((np.dot(mu1.T, sigma1_inverse_mu_1) - np.dot(mu0.T, sigma0_inverse_mu_0)) / 2)
-  + math.log((1 - phi_y) / phi_y) + (math.log(np.linalg.norm(sigma0) / np.linalg.norm(sigma1)) / 2)
+  + math.log((1 - phi_y) / phi_y) + (math.log(np.linalg.det(sigma0) / np.linalg.det(sigma1)) / 2)
 
   a = K2_quadratic[0][0]
   b = K2_quadratic[0][1] + K2_quadratic[1][0]
@@ -142,7 +142,7 @@ if __name__ == "__main__":
   # Loading and preparing y
   y = np.loadtxt('./data/q4/q4y.dat', dtype=str)
   y[y == "Alaska"] = float(0)
-  y[y == "Canada"] = float(1)
+  y[y == "Canada"] = float(1) 
   y = np.array(y, dtype=float)
 
   print("Sigma 1 = Sigma 0 =>")
