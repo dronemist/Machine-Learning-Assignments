@@ -6,7 +6,7 @@ import collections
 
 EPSILON = 1e-3
 
-LEARNING_RATE = 0.01
+LEARNING_RATE = 0.001
 
 def sample_points():
   """
@@ -46,8 +46,6 @@ def stochastic_gradient_descent(x, y, batch_size):
   """
   new_theta = np.zeros_like(x[0])
   old_theta = new_theta
-  # new_theta = np.array([1, 2])
-  # old_theta = new_theta
 
   old_cost = 0
   new_cost = 0
@@ -56,11 +54,12 @@ def stochastic_gradient_descent(x, y, batch_size):
   count = 0
 
   total_samples = np.shape(x[:, 0])[0]
-  threshold = min(2000, int(2 * total_samples / batch_size))
-
+  threshold = min(4000, int(2 * total_samples / batch_size))
+  if batch_size == 1:
+    threshold = 20000 
   buffer = np.array([])
 
-  # Plotting the mesh
+  # # Plotting the mesh
   # ax = plt.axes(projection='3d')
 
   # # Labels
