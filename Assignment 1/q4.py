@@ -131,6 +131,7 @@ def plot_2D(x, y):
   plt.xlabel('x1')
   plt.ylabel('x2')
   plt.legend()
+  plt.title('GDA')
   plt.show()
 
 
