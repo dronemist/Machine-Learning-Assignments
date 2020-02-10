@@ -167,8 +167,8 @@ if __name__ == "__main__":
     learning_rate = 0.01   
 
   # Reading csv file and adding 1 for the intercept term
-  acidity = __add_dimension(normalise(read_csv_file('data/q1/linearX.csv')))
-  density = read_csv_file('data/q1/linearY.csv')
+  acidity = __add_dimension(normalise(read_csv_file('./data/q1/linearX.csv')))
+  density = read_csv_file('./data/q1/linearY.csv')
 
   # Applying gradient descent
   LEARNING_RATE = learning_rate
