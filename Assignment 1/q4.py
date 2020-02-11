@@ -105,7 +105,7 @@ def plot_2D(x, y):
   sigma1_inverse_mu_1 = np.dot(sigma1_inverse, mu1)
   sigma0_inverse_mu_0 = np.dot(sigma0_inverse, mu0)
   K1_quadratic = sigma0_inverse_mu_0 - sigma1_inverse_mu_1
-  K2_quadratic = sigma1_inverse - sigma0_inverse
+  K2_quadratic = (sigma1_inverse - sigma0_inverse) / 2
   constant_quadratic = - ((np.dot(mu1.T, sigma1_inverse_mu_1) - np.dot(mu0.T, sigma0_inverse_mu_0)) / 2)
   + math.log((1 - phi_y) / phi_y) + (math.log(np.linalg.det(sigma0) / np.linalg.det(sigma1)) / 2)
 
