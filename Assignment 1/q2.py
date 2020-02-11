@@ -58,7 +58,6 @@ def stochastic_gradient_descent(x, y, batch_size):
 
   total_samples = np.shape(x[:, 0])[0]
   CHECK_N = 2000
-
   # # Plotting the mesh
   # ax = plt.axes(projection='3d')
 
@@ -75,19 +74,22 @@ def stochastic_gradient_descent(x, y, batch_size):
       
       # Gradient descent
       new_theta = old_theta - (LEARNING_RATE * _gradient(x_curr, y_curr, old_theta))
-      new_cost += _loss(x_curr, y_curr, theta)
+      new_cost += (np.dot(new_theta, new_theta) ** 0.5)
+      # new_cost += _loss(x_curr, y_curr, new_theta)
       # new_cost /= 2
       
       if count % int(total_samples / batch_size) == 0:
         print("Iteration {} => {}".format(count, new_theta))
+      
+      count += 1
 
       if count % CHECK_N == 0:
-        # print(new_cost - old_cost)
         new_cost /= CHECK_N
+        
         diff = abs(new_cost - old_cost)
         old_cost = new_cost
         new_cost = 0
-        if diff < EPSILON:
+        if diff < EPSILON or count > 120000:
           print("Number of updates: {}".format(count))
           plt.show()
           return new_theta
@@ -99,7 +101,7 @@ def stochastic_gradient_descent(x, y, batch_size):
       
       # Updating theta
       old_theta = new_theta
-      count += 1
+      
 
 
 if __name__ == "__main__":
@@ -119,7 +121,7 @@ if __name__ == "__main__":
     # Reading the data and modifying to desired form
     k = np.loadtxt('samples.txt')
     # Shuffling data
-    # np.random.shuffle(k)
+    np.random.shuffle(k)
     x1 = k[:, 0]
     x2 = k[:, 1]
     y = k[:, 2]
