@@ -144,11 +144,11 @@ def batch_gradient_descent(x, y, draw_3d = True):
     if count % 10 == 0:
       if draw_3d:
         ax.scatter3D(new_theta[0], new_theta[1], new_cost)
-      else: 
-        ax.scatter(new_theta[0], new_theta[1], marker='o')  
+      else:
+        ax.scatter(new_theta[0], new_theta[1], marker='o')
       plt.pause(0.2)
     count += 1
-
+  print(count)
   plt.show()
   return new_theta
 

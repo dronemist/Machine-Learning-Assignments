@@ -65,7 +65,7 @@ def _gradient_logistic(x, y, theta):
   for (i, x_i) in enumerate(x):
     gradient += -1 * (y[i] - sigmoid(x_i, theta)) * np.reshape(x_i, (total_parameters, 1))
   
-  return gradient / total_samples
+  return gradient
 
 def _hessian_logistic(x, y, theta):
   total_parameters = np.shape(x[-1])[0]
