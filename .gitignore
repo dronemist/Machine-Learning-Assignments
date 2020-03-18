@@ -136,3 +136,6 @@ dmypy.json
 
 # Data
 Assignment\ 2/data
+
+# Txt's
+*.txt
